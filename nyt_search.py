@@ -29,7 +29,7 @@ class search_api:
         """
         Convert keyword arguments to strings friendly with nytimes requests.
         """
-        arguments = process_input(args)
+        arguments = self.process_input(args)
         valuestring = ''
 
         for keyword, value in arguments.items():
@@ -53,9 +53,10 @@ class search_api:
             if isinstance(value, list):
                 for list_key, list_val in enumerate(value):
                     kwargs[list_key] = list_val.encode('utf8').lower()
-            if isisntance(value, dict):
+            if isinstance(value, dict):
                 kwargs[keyword] = self.process_input(value)            
-    
+        return kwargs
+
     def search(self, **kwargs):
         """
         Perform a search with parameters specified within 
@@ -63,8 +64,9 @@ class search_api:
         The API automatically returns a JSON of the search results; 
         automatically convert to a dictionary for python utility.
         """
-        search_parameters = convert_kwargs(kwargs)
-        search_url = 'https://api.nytimes.com/svc/search/v2/articlesearchq%s&api-key=%s' % (
+        print(kwargs)
+        search_parameters = self.convert_kwargs(kwargs)
+        search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?%s&api-key=%s' % (
                       search_parameters, self.api_key
         )
         result = requests.get(search_url)
