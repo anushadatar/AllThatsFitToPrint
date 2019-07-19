@@ -25,20 +25,6 @@ class search_api:
             api_key = str(input("Please input your API Key here.")) 
         self.api_key = api_key
     
-    def search(self, **kwargs):
-        """
-        Perform a search with parameters specified within 
-
-        The API automatically returns a JSON of the search results; 
-        automatically convert to a dictionary for python utility.
-        """
-        search_parameters = convert_kwargs(kwargs)
-        search_url = 'https://api.nytimes.com/svc/search/v2/articlesearchq%s&api-key=%s' % (
-                      search_parameters, self.api_key
-        )
-        result = requests.get(search_url)
-        return result.json()
-    
     def convert_kwargs(self, args):
         """
         Convert keyword arguments to strings friendly with nytimes requests.
@@ -69,3 +55,17 @@ class search_api:
                     kwargs[list_key] = list_val.encode('utf8').lower()
             if isisntance(value, dict):
                 kwargs[keyword] = self.process_input(value)            
+    
+    def search(self, **kwargs):
+        """
+        Perform a search with parameters specified within 
+
+        The API automatically returns a JSON of the search results; 
+        automatically convert to a dictionary for python utility.
+        """
+        search_parameters = convert_kwargs(kwargs)
+        search_url = 'https://api.nytimes.com/svc/search/v2/articlesearchq%s&api-key=%s' % (
+                      search_parameters, self.api_key
+        )
+        result = requests.get(search_url)
+        return result.json()
