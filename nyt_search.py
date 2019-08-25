@@ -46,7 +46,6 @@ class search_api:
         kwargs : Input argument dictionary
         returns : Dictionary of processed arguments.
         """
-        print kwargs.items()
         for keyword, value in kwargs.items():
             if isinstance(value, bool):
                 kwargs[keyword] = str(value).lower()
@@ -59,19 +58,17 @@ class search_api:
                 kwargs[keyword] = self.process_input(value)            
         return kwargs
 
-    def search(self, **kwargs):
+    def search(self, page=1, **kwargs):
         """
-        Perform a search with parameters specified within 
+        Perform a search with parameters specified within the keyword args. 
 
         The API automatically returns a JSON of the search results; 
         automatically convert to a dictionary for python utility.
         """
-        print(kwargs)
         search_parameters = self.convert_kwargs(kwargs)
-        search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?%s&api-key=%s' % (
-                      search_parameters, self.api_key
+        search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?%s&page=%i&api-key=%s' % (
+                      search_parameters, page, self.api_key
         )
-        print(search_url)
         result = requests.get(search_url)
         return result.json()
 
@@ -81,5 +78,4 @@ class search_api:
             if article[u'type_of_material'] == 'Op-Ed':
                 title = article['headline']['main']
                 print(title)
-                title_array.append(title.encode('utf-8'))
-                            
+                title_array.append(title.encode('ascii', 'ignore'))
