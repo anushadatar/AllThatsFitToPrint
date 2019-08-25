@@ -2,6 +2,8 @@
 """
 Wrapper for the New York Times search API
 """
+
+import json
 import requests
 
 """
@@ -33,9 +35,8 @@ class search_api:
         valuestring = ''
 
         for keyword, value in arguments.items():
-            if isinstance(value, list):
-                value = ",".join(value)
-                valuestring += '%s=%s' % (keyword, value)              
+               valuestring += "%s=%s" % (keyword, value)
+
         return  valuestring
     
     def process_input(self, kwargs):
@@ -45,6 +46,7 @@ class search_api:
         kwargs : Input argument dictionary
         returns : Dictionary of processed arguments.
         """
+        print kwargs.items()
         for keyword, value in kwargs.items():
             if isinstance(value, bool):
                 kwargs[keyword] = str(value).lower()
@@ -69,5 +71,15 @@ class search_api:
         search_url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?%s&api-key=%s' % (
                       search_parameters, self.api_key
         )
+        print(search_url)
         result = requests.get(search_url)
         return result.json()
+
+    def extract_oped_titles(self, json_file):
+        title_array = []
+        for article in json_file['response']['docs']:
+            if article[u'type_of_material'] == 'Op-Ed':
+                title = article['headline']['main']
+                print(title)
+                title_array.append(title.encode('utf-8'))
+                            
