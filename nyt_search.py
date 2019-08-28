@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Wrapper for the New York Times search API
+Wrapper for the New York Times search API for op-ed title generation. 
 """
 
 import json
@@ -10,6 +10,7 @@ from textgenrnn import textgenrnn
 """
 To use this library, fill in your application-specific api key from the 
 New York Times developer console and fill it in here.
+Alternatively, pass in the value when creating a search_ai object.
 """
 API_KEY = ""
 
@@ -19,7 +20,7 @@ class search_api:
     Search API object that can be instantiated for quick use of the NYTimes search
     API in python
     """
-    def __init__(self, api_key):
+    def __init__(self, api_key=API_KEY):
         """
         Initializes an instance of the search api using a development key.
         api_key = String api key associated with developer account.
@@ -31,6 +32,9 @@ class search_api:
     def convert_kwargs(self, args):
         """
         Convert keyword arguments to strings friendly with nytimes requests.
+
+        args : Initial elasticsearch keyword arguments for NYTImes query.
+        returns : String compatiable with nytimes search URL generation.
         """
         arguments = self.process_input(args)
         valuestring = ''
