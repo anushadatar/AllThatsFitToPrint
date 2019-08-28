@@ -5,6 +5,7 @@ Wrapper for the New York Times search API
 
 import json
 import requests
+from textgenrnn import textgenrnn
 
 """
 To use this library, fill in your application-specific api key from the 
@@ -58,7 +59,7 @@ class search_api:
                 kwargs[keyword] = self.process_input(value)            
         return kwargs
 
-    def search(self, page=1, **kwargs):
+    def search(self, kwargs, page=1):
         """
         Perform a search with parameters specified within the keyword args. 
 
@@ -72,10 +73,39 @@ class search_api:
         result = requests.get(search_url)
         return result.json()
 
+
     def extract_oped_titles(self, json_file):
         title_array = []
         for article in json_file['response']['docs']:
-            if article[u'type_of_material'] == 'Op-Ed':
+            if (article[u'type_of_material'] == 'Op-Ed'):
                 title = article['headline']['main']
-                print(title)
-                title_array.append(title.encode('ascii', 'ignore'))
+                title_array.append(title.encode('ascii', 'ignore'))   
+        return title_array  
+ 
+    def save_all_oped_titles(self, **kwargs):
+        """
+        Saves all of the extracted op-ed titles for a certain query to a text   
+        file for additional processing.
+        """
+        query = kwargs
+        text_file = open("oped_titles.txt", "w+")
+        page_number = 1
+        try:
+            while (page_number < 100):
+                # Get all of the results in the page.
+                result_json = self.search(query, page_number)
+                results = self.extract_oped_titles(result_json)
+                for element in results:            
+                    if (element != None):
+                        text_file.write(str(element, 'utf-8') + "\n") 
+                page_number += 1
+        except:
+            text_file.close()
+
+
+    def generate_new_titles(self, filename='oped_titles.txt', num_epochs=1):
+        textgenerator = textgenrnn()
+        print(type(filename))
+        textgenerator.train_from_file(filename, num_epochs)
+        textgenerator.generate()
+
