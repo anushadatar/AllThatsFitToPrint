@@ -6,7 +6,7 @@ The purpose of this tool is to generate novel (or semi-novel, at least) op-ed ti
 
 To run the program, run 
 ```sh
-python3 nyt_search.py
+python3 AllThatsFitToPrint.py
 ```
 This script will prompt you for the value of your query. Note that this query should be an elasticsearch style query consistent with the requirements of the [NYT Search API](https://developer.nytimes.com/docs/articlesearch-product/1/overview). For example, should I want to predict what Ross Douthat's next piece will be, I would input "Ross+Douthat" (including the quotation marks). 
 
