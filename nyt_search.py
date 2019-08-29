@@ -12,7 +12,7 @@ To use this library, fill in your application-specific api key from the
 New York Times developer console and fill it in here.
 Alternatively, pass in the value when creating a search_ai object.
 """
-API_KEY = "yP1rpdAAxAK6j8qXAkWN32l8jNtD195f"
+API_KEY = ""
 
 
 class search_api:
