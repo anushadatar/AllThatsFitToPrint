@@ -12,7 +12,7 @@ To use this library, fill in your application-specific api key from the
 New York Times developer console and fill it in here.
 Alternatively, pass in the value when creating a search_ai object.
 """
-API_KEY = ""
+API_KEY = "yP1rpdAAxAK6j8qXAkWN32l8jNtD195f"
 
 
 class search_api:
@@ -79,6 +79,12 @@ class search_api:
 
 
     def extract_oped_titles(self, json_file):
+        """
+        Extracts op-ed titles from json file generated via search query.
+
+        json_file : json file returned by the NYTimes API.
+        returns : array of strings representing the op-ed titles.
+        """
         title_array = []
         for article in json_file['response']['docs']:
             if (article[u'type_of_material'] == 'Op-Ed'):
@@ -106,10 +112,26 @@ class search_api:
         except:
             text_file.close()
 
-
     def generate_new_titles(self, filename='oped_titles.txt', num_epochs=1):
         textgenerator = textgenrnn()
         print(type(filename))
         textgenerator.train_from_file(filename, num_epochs)
         textgenerator.generate()
 
+def main():
+    """
+    Prompt the user for a query to use for generating novel op-ed titles.
+    Takes in a query, instantiates the API, saves all of the oped titles,
+    and then prints new titles to the command line.
+   
+    Note that the query needs to be a proper API query.
+    # TODO Santiize the input.
+    """
+    query = input("What is your search query? Do not include the q!")
+    api = search_api(API_KEY)
+    print(query)
+    api.save_all_oped_titles(q = query)
+    api.generate_new_titles()
+
+if __name__ == "__main__":
+    main()

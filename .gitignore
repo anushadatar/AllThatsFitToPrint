@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Utility for testing.
+*.txt
+
+# The script I use to populate the api key.
+get_articles.py
+
+# Vim artifacts
+*.swp
+*.swo
+
+# Text generation artifacts.
+textgenrnn_weights.hdf5
